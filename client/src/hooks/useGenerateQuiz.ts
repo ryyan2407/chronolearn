@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
+import { queryKeys } from "../lib/queryKeys";
 import { quizService } from "../services/quiz.service";
 import type { GenerateQuizInput } from "../types/quiz";
 
@@ -8,8 +9,9 @@ export function useGenerateQuiz() {
 
   return useMutation({
     mutationFn: (payload: GenerateQuizInput) => quizService.generate(payload),
-    onSuccess: () => {
-      void queryClient.invalidateQueries({ queryKey: ["quizzes"] });
+    onSuccess: (quiz) => {
+      queryClient.setQueryData(queryKeys.quizzes.detail(quiz.id), quiz);
+      void queryClient.invalidateQueries({ queryKey: queryKeys.quizzes.all });
     }
   });
 }

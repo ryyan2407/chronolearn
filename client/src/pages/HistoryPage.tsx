@@ -10,12 +10,13 @@ import { AppLayout } from "../components/layout/AppLayout";
 import { Button } from "../components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 import { Input } from "../components/ui/input";
+import { queryKeys } from "../lib/queryKeys";
 import { attemptsService } from "../services/attempts.service";
 import { formatDate, scorePercentage } from "../lib/utils";
 
 export function HistoryPage() {
   const attemptsQuery = useQuery({
-    queryKey: ["attempts"],
+    queryKey: queryKeys.attempts.all,
     queryFn: attemptsService.list
   });
   const [search, setSearch] = useState("");

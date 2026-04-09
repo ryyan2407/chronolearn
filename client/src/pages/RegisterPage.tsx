@@ -9,7 +9,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../co
 import { Input } from "../components/ui/input";
 import { useAuthSession } from "../hooks/useAuthSession";
 import { getPostAuthRedirectTarget } from "../lib/auth";
-import { authService, getApiErrorMessage } from "../services/auth.service";
+import { queryKeys } from "../lib/queryKeys";
+import { parseApiErrorMessage } from "../services/api";
+import { authService } from "../services/auth.service";
 
 export function RegisterPage() {
   const location = useLocation();
@@ -24,12 +26,12 @@ export function RegisterPage() {
 
   const registerMutation = useMutation({
     mutationFn: authService.register,
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ["auth-session"] });
+    onSuccess: async (response) => {
+      queryClient.setQueryData(queryKeys.authSession, response);
       navigate(redirectTarget, { replace: true });
     },
     onError: (error) => {
-      setSubmitError(getApiErrorMessage(error, "Registration failed."));
+      setSubmitError(parseApiErrorMessage(error, "Registration failed."));
     }
   });
 

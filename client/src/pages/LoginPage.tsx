@@ -9,7 +9,9 @@ import { Input } from "../components/ui/input";
 import { Button } from "../components/ui/button";
 import { useAuthSession } from "../hooks/useAuthSession";
 import { getPostAuthRedirectTarget } from "../lib/auth";
-import { authService, getApiErrorMessage } from "../services/auth.service";
+import { queryKeys } from "../lib/queryKeys";
+import { parseApiErrorMessage } from "../services/api";
+import { authService } from "../services/auth.service";
 
 export function LoginPage() {
   const location = useLocation();
@@ -23,12 +25,12 @@ export function LoginPage() {
 
   const loginMutation = useMutation({
     mutationFn: authService.login,
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ["auth-session"] });
+    onSuccess: async (response) => {
+      queryClient.setQueryData(queryKeys.authSession, response);
       navigate(redirectTarget, { replace: true });
     },
     onError: (error) => {
-      setSubmitError(getApiErrorMessage(error, "Login failed."));
+      setSubmitError(parseApiErrorMessage(error, "Login failed."));
     }
   });
 

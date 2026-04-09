@@ -1,5 +1,3 @@
-import axios from "axios";
-
 import { api } from "./api";
 import type { AuthResponse, LoginInput, RegisterInput } from "../types/auth";
 
@@ -24,11 +22,3 @@ export const authService = {
     return data;
   }
 };
-
-export function getApiErrorMessage(error: unknown, fallback: string) {
-  if (axios.isAxiosError<{ message?: string }>(error)) {
-    return error.response?.data?.message ?? fallback;
-  }
-
-  return fallback;
-}

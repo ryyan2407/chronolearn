@@ -4,6 +4,7 @@ import { EmptyState } from "../components/common/EmptyState";
 import { ErrorState } from "../components/common/ErrorState";
 import { LoadingSpinner } from "../components/common/LoadingSpinner";
 import { SectionHeader } from "../components/common/SectionHeader";
+import { queryKeys } from "../lib/queryKeys";
 import { DashboardPageContent } from "./DashboardPageContent";
 import { analyticsService } from "../services/analytics.service";
 import { attemptsService } from "../services/attempts.service";
@@ -11,12 +12,12 @@ import { AppLayout } from "../components/layout/AppLayout";
 
 export function DashboardPage() {
   const analyticsQuery = useQuery({
-    queryKey: ["analytics-overview"],
+    queryKey: queryKeys.analyticsOverview,
     queryFn: analyticsService.overview
   });
 
   const attemptsQuery = useQuery({
-    queryKey: ["attempts"],
+    queryKey: queryKeys.attempts.all,
     queryFn: attemptsService.list
   });
 

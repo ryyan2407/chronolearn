@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 
 import { appName } from "../../lib/constants";
 import { useAuthSession } from "../../hooks/useAuthSession";
+import { queryKeys } from "../../lib/queryKeys";
 import { authService } from "../../services/auth.service";
 import { Button } from "../ui/button";
 
@@ -12,7 +13,7 @@ export function Navbar() {
   const sessionQuery = useAuthSession();
   const resetSessionState = () => {
     queryClient.clear();
-    queryClient.setQueryData(["auth-session"], null);
+    queryClient.setQueryData(queryKeys.authSession, null);
     navigate("/login");
   };
 

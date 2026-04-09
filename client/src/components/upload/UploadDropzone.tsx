@@ -46,7 +46,7 @@ export function UploadDropzone({ onFileSelect, selectedFile, isPending }: Upload
           </div>
           <div>
             <p className="font-medium text-slate-900">Drop a chapter PDF or click to browse</p>
-            <p className="text-sm text-slate-600">Choose a PDF from your device or drag one into this area.</p>
+            <p className="text-sm text-slate-600">Choose a PDF from your device or drag one into this area. Files up to 10 MB are supported.</p>
           </div>
           <input
             accept="application/pdf"

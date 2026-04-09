@@ -14,15 +14,18 @@ import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card"
 import { Input } from "../components/ui/input";
 import { useGenerateQuiz } from "../hooks/useGenerateQuiz";
 import { useUploadMaterial } from "../hooks/useUploadMaterial";
-import { getApiErrorMessage } from "../services/auth.service";
+import { queryKeys } from "../lib/queryKeys";
+import { parseApiErrorMessage } from "../services/api";
 import { materialsService } from "../services/materials.service";
+
+const MAX_PDF_SIZE_MB = 10;
 
 export function UploadPage() {
   const navigate = useNavigate();
   const { topicMutation, pdfMutation } = useUploadMaterial();
   const generateQuizMutation = useGenerateQuiz();
   const materialsQuery = useQuery({
-    queryKey: ["materials"],
+    queryKey: queryKeys.materials.all,
     queryFn: materialsService.list
   });
 
@@ -72,7 +75,7 @@ export function UploadPage() {
       setQuizTitle(`${material.title} Quiz`);
       setStatusMessage(`Saved "${material.title}". You can generate a quiz now.`);
     } catch (error) {
-      setTopicError(getApiErrorMessage(error, "Topic material could not be created."));
+      setTopicError(parseApiErrorMessage(error, "Topic material could not be created."));
     }
   };
 
@@ -92,6 +95,11 @@ export function UploadPage() {
       return;
     }
 
+    if (selectedFile.size > MAX_PDF_SIZE_MB * 1024 * 1024) {
+      setPdfError(`Choose a PDF smaller than ${MAX_PDF_SIZE_MB} MB.`);
+      return;
+    }
+
     const formData = new FormData();
     formData.append("file", selectedFile);
     if (title.trim()) {
@@ -102,9 +110,10 @@ export function UploadPage() {
       const material = await pdfMutation.mutateAsync(formData);
       setSelectedMaterialId(material.id);
       setQuizTitle(`${material.title} Quiz`);
+      setSelectedFile(null);
       setStatusMessage(`Uploaded "${material.title}". You can generate a quiz now.`);
     } catch (error) {
-      setPdfError(getApiErrorMessage(error, "PDF upload failed."));
+      setPdfError(parseApiErrorMessage(error, "PDF upload failed."));
     }
   };
 
@@ -132,7 +141,7 @@ export function UploadPage() {
       setStatusMessage(`Generated "${quiz.title}". Opening quiz now.`);
       navigate(`/quiz/${quiz.id}`);
     } catch (error) {
-      setQuizError(getApiErrorMessage(error, "Quiz generation failed."));
+      setQuizError(parseApiErrorMessage(error, "Quiz generation failed."));
     }
   };
 
@@ -155,6 +164,8 @@ export function UploadPage() {
             description="Best when you already have lecture handouts or textbook extracts and want ChronoLearn to parse them into quiz-ready material."
           />
         </div>
+
+        {materialsQuery.isError ? <ErrorState message="Saved materials could not be loaded right now." /> : null}
 
         <div className="grid gap-6 xl:grid-cols-2">
           <form className="space-y-4" onSubmit={handleTopicSubmit}>
@@ -221,7 +232,7 @@ export function UploadPage() {
             <Button
               type="button"
               onClick={handleGenerateQuiz}
-              disabled={generateQuizMutation.isPending || !activeMaterialId}
+              disabled={generateQuizMutation.isPending || !activeMaterialId || materialsQuery.isLoading}
             >
               {generateQuizMutation.isPending ? "Generating..." : "Generate quiz"}
             </Button>
