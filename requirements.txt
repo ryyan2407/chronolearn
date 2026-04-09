@@ -1,0 +1,7 @@
+# Runtime requirements for this project
+# Node.js 20+
+# npm 10+
+# PostgreSQL 15+
+#
+# Application packages are defined in:
+# server/package.json

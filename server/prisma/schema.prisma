@@ -1,0 +1,115 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum MaterialType {
+  PDF
+  TOPIC
+}
+
+enum QuestionType {
+  MCQ
+  SHORT_ANSWER
+}
+
+model User {
+  id           String     @id @default(cuid())
+  name         String
+  email        String     @unique
+  passwordHash String
+  materials    Material[]
+  quizzes      Quiz[]
+  attempts     Attempt[]
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+}
+
+model Material {
+  id              String          @id @default(cuid())
+  userId          String?
+  user            User?           @relation(fields: [userId], references: [id])
+  title           String
+  type            MaterialType
+  topic           String?
+  originalFileUrl String?
+  extractedText   String
+  summary         String?
+  quizzes         Quiz[]
+  chunks          MaterialChunk[]
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+}
+
+model MaterialChunk {
+  id         String   @id @default(cuid())
+  materialId String
+  material   Material @relation(fields: [materialId], references: [id], onDelete: Cascade)
+  orderIndex Int
+  content    String
+  createdAt  DateTime @default(now())
+
+  @@unique([materialId, orderIndex])
+}
+
+model Quiz {
+  id         String     @id @default(cuid())
+  userId     String?
+  user       User?      @relation(fields: [userId], references: [id])
+  materialId String
+  material   Material   @relation(fields: [materialId], references: [id], onDelete: Cascade)
+  title      String
+  questions  Question[]
+  attempts   Attempt[]
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+}
+
+model Question {
+  id            String       @id @default(cuid())
+  quizId        String
+  quiz          Quiz         @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  type          QuestionType
+  prompt        String
+  options       Json?
+  correctAnswer String?
+  rubric        Json?
+  sourceContext Json?
+  marks         Int          @default(1)
+  answers       Answer[]
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+}
+
+model Attempt {
+  id         String   @id @default(cuid())
+  userId     String?
+  user       User?    @relation(fields: [userId], references: [id])
+  quizId     String
+  quiz       Quiz     @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  totalScore Int      @default(0)
+  maxScore   Int      @default(0)
+  answers    Answer[]
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+model Answer {
+  id             String   @id @default(cuid())
+  attemptId      String
+  attempt        Attempt  @relation(fields: [attemptId], references: [id], onDelete: Cascade)
+  questionId     String
+  question       Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  studentAnswer  String
+  awardedScore   Int      @default(0)
+  feedback       String?
+  evaluationJson Json?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@unique([attemptId, questionId])
+}
