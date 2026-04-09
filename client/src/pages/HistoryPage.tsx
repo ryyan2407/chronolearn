@@ -46,9 +46,9 @@ export function HistoryPage() {
         <SectionHeader
           eyebrow="History"
           title="Attempt history and recent scores"
-          description="Use this page as the audit trail for quiz submissions."
+          description="Review earlier quiz runs, compare scores, and reopen detailed results whenever you want another pass."
         />
-        {attemptsQuery.isLoading ? <LoadingSpinner /> : null}
+        {attemptsQuery.isLoading ? <LoadingSpinner label="Loading your attempt history..." /> : null}
         {attemptsQuery.isError ? <ErrorState message="Attempts could not be loaded." /> : null}
         {attemptsQuery.data?.length ? (
           <div className="space-y-4">
@@ -83,9 +83,12 @@ export function HistoryPage() {
                     </p>
                   </div>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="flex flex-wrap items-center justify-between gap-3">
+                  <p className="text-sm leading-6 text-slate-600">
+                    Reopen this result to review feedback, source context, and where you lost marks.
+                  </p>
                   <Link to={`/results/${attempt.id}`}>
-                    <Button variant="outline">Review attempt</Button>
+                    <Button variant="outline">Open results</Button>
                   </Link>
                 </CardContent>
               </Card>
@@ -96,7 +99,15 @@ export function HistoryPage() {
           <EmptyState title="No matching attempts" description="Try a different search term or switch the sorting mode." />
         ) : null}
         {attemptsQuery.data?.length === 0 ? (
-          <EmptyState title="No saved attempts" description="Submit a quiz once and the history will appear here." />
+          <EmptyState
+            title="No saved attempts"
+            description="Finish one quiz and your results will start building a searchable history here."
+            action={
+              <Link to="/upload">
+                <Button>Generate a quiz</Button>
+              </Link>
+            }
+          />
         ) : null}
       </div>
     </AppLayout>

@@ -74,6 +74,7 @@ This document summarizes the app's current feature set, the work completed so fa
 - Shared API client and centralized API error parsing
 - Query/mutation handling through TanStack Query
 - More predictable query invalidation and cache seeding after mutations
+- Demo-facing polish across upload, quiz, results, dashboard, and history pages
 
 ## Current User Flow
 
@@ -93,13 +94,15 @@ The main implemented journey is:
 
 ### Documentation
 
-- Replaced the root README with a practical local setup guide
+- Replaced the root README with a GitHub-ready project overview, screenshots, setup, and verification commands
 - Added server startup instructions
 - Added client startup instructions
 - Added local database setup guidance
 - Added troubleshooting guidance
 - Added a missing `server/.env.example` file so the documented setup flow works
 - Added [demo-ready-checklist.md](/home/ryyan/chronolearn/docs/demo-ready-checklist.md)
+- Added [portfolio-packaging.md](/home/ryyan/chronolearn/docs/portfolio-packaging.md) with resume bullets, portfolio copy, and architecture notes
+- Added captured demo screenshots under [docs/screenshots](/home/ryyan/chronolearn/docs/screenshots)
 
 ### Upload Page Fixes
 
@@ -135,6 +138,9 @@ The main implemented journey is:
 - Verified persisted attempt detail, history, analytics, and logout behavior
 - Added automated integration coverage through `npm run demo:check`
 - Added a repeatable generated PDF fixture inside the demo-check script
+- Added Playwright browser E2E coverage for the full happy path
+- Split browser verification from screenshot capture so regression runs stay fast
+- Added a repeatable screenshot capture flow for README and portfolio assets
 
 ## Known Working Pages
 
@@ -189,6 +195,20 @@ cd /home/ryyan/chronolearn/server
 npm run demo:check
 ```
 
+Automated browser command:
+
+```bash
+cd /home/ryyan/chronolearn/client
+npm run test:e2e
+```
+
+Screenshot refresh command:
+
+```bash
+cd /home/ryyan/chronolearn/client
+npm run screenshots:demo
+```
+
 ## Known Constraints
 
 - Most app features depend on being authenticated because core routes and API endpoints are protected
@@ -196,16 +216,16 @@ npm run demo:check
 - The frontend and backend must both be started separately in development
 - The automated demo check assumes a reachable backend at `http://127.0.0.1:4000/api` unless `DEMO_CHECK_API_BASE_URL` is set
 - The automated demo check depends on `gs` being available locally to generate a valid PDF fixture
-- A fully browser-driven UI automation pass has not been added yet
+- The Playwright-based screenshot flow depends on the same local browser tooling used for E2E tests
 
 ## Remaining Work
 
 The highest-value next steps are now narrower:
 
-- Add browser-driven end-to-end UI automation if you want click-level regression coverage
-- Do a final visual and UX polish pass across forms, loading states, and empty states
-- Rotate and remove any committed secrets from tracked env files
-- Tighten any remaining product copy and demo content
+- Rotate any keys that may have been exposed outside the current local repo state
+- Add more browser E2E coverage for non-happy-path UI states if you want broader regression protection
+- Tighten any final product copy and demo content details
+- Prepare deployment or hosted demo infrastructure if you want a public portfolio link
 
 ## Latest Confirmed State
 
@@ -221,3 +241,6 @@ As of the latest pass:
 - History and dashboard counts update correctly
 - Logout clears access to protected API state
 - `npm run demo:check` passes against the live backend
+- `npm run test:e2e` passes for the browser happy path
+- `npm run screenshots:demo` regenerates README/demo screenshots
+- The root README, screenshots, and portfolio copy are in place for project presentation

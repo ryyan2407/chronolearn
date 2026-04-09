@@ -76,7 +76,7 @@ export function QuizPage() {
   if (quizQuery.isLoading) {
     return (
       <AppLayout>
-        <LoadingSpinner />
+        <LoadingSpinner label="Loading your quiz..." />
       </AppLayout>
     );
   }
@@ -137,6 +137,9 @@ export function QuizPage() {
           questionIds={quiz.questions.map((item) => item.id)}
           onJump={setCurrentIndex}
         />
+        <div className="rounded-[24px] border border-stone-200 bg-stone-50/80 px-5 py-4 text-sm leading-6 text-slate-600">
+          Move through the questions in order or jump ahead using the progress chips. You can submit with blanks if needed, but unanswered questions will receive no marks.
+        </div>
         <QuestionCard question={question} value={answers[question.id] ?? ""} onChange={updateAnswer} />
         <QuizNavigation
           canGoBack={currentIndex > 0}

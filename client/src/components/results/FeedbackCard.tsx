@@ -17,7 +17,7 @@ export function FeedbackCard({ answers }: FeedbackCardProps) {
   return (
     <Card className="bg-white/90">
       <CardHeader>
-        <CardTitle>Generated feedback</CardTitle>
+        <CardTitle>Written feedback</CardTitle>
       </CardHeader>
       <CardContent className="space-y-3">
         {feedback.length ? (
@@ -29,7 +29,7 @@ export function FeedbackCard({ answers }: FeedbackCardProps) {
             </div>
           ))
         ) : (
-          <p className="text-sm text-slate-600">No written feedback was returned for this attempt.</p>
+          <p className="text-sm text-slate-600">No written feedback was returned for this attempt, but the question review below still shows your scores and answer details.</p>
         )}
       </CardContent>
     </Card>

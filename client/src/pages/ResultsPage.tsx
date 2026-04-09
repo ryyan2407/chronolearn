@@ -1,10 +1,11 @@
-import { useLocation, useParams } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 
 import { EmptyState } from "../components/common/EmptyState";
 import { ErrorState } from "../components/common/ErrorState";
 import { LoadingSpinner } from "../components/common/LoadingSpinner";
 import { SectionHeader } from "../components/common/SectionHeader";
 import { AppLayout } from "../components/layout/AppLayout";
+import { Button } from "../components/ui/button";
 import { FeedbackCard } from "../components/results/FeedbackCard";
 import { ImprovementTips } from "../components/results/ImprovementTips";
 import { QuestionReviewCard } from "../components/results/QuestionReviewCard";
@@ -27,8 +28,13 @@ export function ResultsPage() {
           eyebrow="Results"
           title="Review the score, feedback, and question-level outcomes"
           description="Review how you performed, where you lost marks, and what to revisit before the next attempt."
+          action={
+            <Link to="/history">
+              <Button variant="outline">Back to history</Button>
+            </Link>
+          }
         />
-        {attemptQuery.isLoading ? <LoadingSpinner /> : null}
+        {attemptQuery.isLoading ? <LoadingSpinner label="Loading your results..." /> : null}
         {attemptQuery.isError ? <ErrorState message="Attempt results could not be loaded." /> : null}
         {attemptQuery.data ? (
           <>
@@ -51,13 +57,13 @@ export function ResultsPage() {
             ) : (
               <EmptyState
                 title="Detailed review unavailable"
-                description="This attempt does not include question-level review data. Try opening the result right after submission for the fullest breakdown."
+                description="This attempt is missing the full question-by-question breakdown. Try opening another result from history or generating a new quiz to continue practicing."
               />
             )}
           </>
         ) : null}
         {attemptQuery.data === null ? (
-          <EmptyState title="Attempt not found" description="The requested attempt id was not present in the attempts list." />
+          <EmptyState title="Attempt not found" description="The result you opened is not available for this account." />
         ) : null}
       </div>
     </AppLayout>

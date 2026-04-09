@@ -5,6 +5,8 @@ server/node_modules/
 # build output
 client/dist/
 server/dist/
+client/playwright-report/
+client/test-results/
 
 # environment files
 client/.env

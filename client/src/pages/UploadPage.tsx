@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 
 import { EmptyState } from "../components/common/EmptyState";
 import { ErrorState } from "../components/common/ErrorState";
+import { LoadingSpinner } from "../components/common/LoadingSpinner";
 import { SectionHeader } from "../components/common/SectionHeader";
 import { AppLayout } from "../components/layout/AppLayout";
 import { MaterialSourceCard } from "../components/upload/MaterialSourceCard";
@@ -151,7 +152,7 @@ export function UploadPage() {
         <SectionHeader
           eyebrow="Material intake"
           title="Create study material, then turn it into a quiz"
-          description="Create study material from notes or a PDF, then generate a quiz from what you uploaded."
+          description="Start with notes or a source PDF, save the material, then turn it into a practice quiz in the same workspace."
         />
 
         <div className="grid gap-6 md:grid-cols-2">
@@ -161,11 +162,12 @@ export function UploadPage() {
           />
           <MaterialSourceCard
             title="PDF upload"
-            description="Best when you already have lecture handouts or textbook extracts and want ChronoLearn to parse them into quiz-ready material."
+            description="Best when you already have lecture handouts or textbook extracts and want ChronoLearn to turn them into quiz-ready study material."
           />
         </div>
 
         {materialsQuery.isError ? <ErrorState message="Saved materials could not be loaded right now." /> : null}
+        {materialsQuery.isLoading ? <LoadingSpinner label="Loading your saved materials..." /> : null}
 
         <div className="grid gap-6 xl:grid-cols-2">
           <form className="space-y-4" onSubmit={handleTopicSubmit}>
@@ -185,7 +187,7 @@ export function UploadPage() {
             />
             {topicError ? <ErrorState message={topicError} /> : null}
             <Button type="submit" disabled={topicMutation.isPending || !topic || !sourceText}>
-              {topicMutation.isPending ? "Creating material..." : "Create topic material"}
+              {topicMutation.isPending ? "Saving material..." : "Save topic material"}
             </Button>
           </form>
 
@@ -193,7 +195,7 @@ export function UploadPage() {
             <UploadDropzone onFileSelect={setSelectedFile} selectedFile={selectedFile} isPending={pdfMutation.isPending} />
             {pdfError ? <ErrorState message={pdfError} /> : null}
             <Button type="button" onClick={handlePdfSubmit} disabled={!selectedFile || pdfMutation.isPending}>
-              {pdfMutation.isPending ? "Uploading..." : "Upload PDF"}
+              {pdfMutation.isPending ? "Uploading PDF..." : "Upload and save PDF"}
             </Button>
           </div>
         </div>
@@ -209,10 +211,11 @@ export function UploadPage() {
         <Card className="bg-white/90">
           <CardHeader>
             <CardTitle>Generate a quiz from stored material</CardTitle>
+            <p className="text-sm leading-6 text-slate-600">Pick any saved material below and create a quiz when you are ready to practice.</p>
           </CardHeader>
           <CardContent className="space-y-4">
             <Input
-              placeholder="Quiz title"
+              placeholder="Quiz title, for example French Revolution Review"
               value={quizTitle}
               onChange={(event) => setQuizTitle(event.target.value)}
             />
@@ -234,15 +237,15 @@ export function UploadPage() {
               onClick={handleGenerateQuiz}
               disabled={generateQuizMutation.isPending || !activeMaterialId || materialsQuery.isLoading}
             >
-              {generateQuizMutation.isPending ? "Generating..." : "Generate quiz"}
+              {generateQuizMutation.isPending ? "Building quiz..." : "Generate quiz"}
             </Button>
           </CardContent>
         </Card>
 
         {materialsQuery.data && materialsQuery.data.length === 0 ? (
           <EmptyState
-            title="No materials stored yet"
-            description="Use one of the forms above to create the first topic or PDF-backed material."
+            title="No study material yet"
+            description="Create your first topic summary or upload a PDF above, then come back here to generate a quiz."
           />
         ) : null}
       </div>

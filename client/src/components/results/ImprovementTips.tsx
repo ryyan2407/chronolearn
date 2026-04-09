@@ -14,7 +14,7 @@ export function ImprovementTips({ attempt }: ImprovementTipsProps) {
   return (
     <Card className="bg-white/90">
       <CardHeader>
-        <CardTitle>Improvement tips</CardTitle>
+        <CardTitle>Next study focus</CardTitle>
       </CardHeader>
       <CardContent className="space-y-3">
         {lowScoring.length ? (
@@ -29,7 +29,7 @@ export function ImprovementTips({ attempt }: ImprovementTipsProps) {
             </div>
           ))
         ) : (
-          <p className="text-sm text-slate-600">Strong attempt. Use the review below to keep reinforcing the same depth of explanation.</p>
+          <p className="text-sm text-slate-600">Strong attempt. Review the highest-value questions below and try another quiz while the context is still fresh.</p>
         )}
       </CardContent>
     </Card>

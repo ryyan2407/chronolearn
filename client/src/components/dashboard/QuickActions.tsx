@@ -9,13 +9,16 @@ export function QuickActions() {
       <CardHeader>
         <CardTitle>Quick actions</CardTitle>
       </CardHeader>
-      <CardContent className="flex flex-wrap gap-3">
+      <CardContent className="space-y-4">
+        <p className="text-sm leading-6 text-slate-600">Create fresh study material, run another quiz, or jump back into your recent review flow.</p>
+        <div className="flex flex-wrap gap-3">
         <Link to="/upload">
-          <Button>Create material</Button>
+          <Button>New study material</Button>
         </Link>
         <Link to="/history">
-          <Button variant="outline">Open history</Button>
+          <Button variant="outline">Review past attempts</Button>
         </Link>
+        </div>
       </CardContent>
     </Card>
   );
