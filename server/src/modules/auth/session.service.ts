@@ -97,7 +97,7 @@ export const sessionService = {
   setSessionCookie(res: Response, token: string) {
     res.cookie(SESSION_COOKIE_NAME, token, {
       httpOnly: true,
-      sameSite: "lax",
+      sameSite: env.NODE_ENV === "production" ? "none" : "lax",
       secure: env.NODE_ENV === "production",
       maxAge: SESSION_MAX_AGE_MS,
       path: "/"
@@ -107,7 +107,7 @@ export const sessionService = {
   clearSessionCookie(res: Response) {
     res.clearCookie(SESSION_COOKIE_NAME, {
       httpOnly: true,
-      sameSite: "lax",
+      sameSite: env.NODE_ENV === "production" ? "none" : "lax",
       secure: env.NODE_ENV === "production",
       path: "/"
     });
