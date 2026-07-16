@@ -10,6 +10,8 @@
     "demo:check": "tsx src/scripts/demoReadyCheck.ts",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate dev",
+    "prisma:deploy": "prisma migrate deploy",
+    "render:build": "prisma generate && prisma migrate deploy && npm run build",
     "lint": "tsc --noEmit -p tsconfig.json"
   },
   "dependencies": {
